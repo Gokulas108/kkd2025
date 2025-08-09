@@ -1,0 +1,34 @@
+1, Fix table alignment (Qty, Amt) in Summary Page ####### Done
+
+2. TOPUP credit Hint : For each individual ######### Done
+
+3. Add chakras ############ Done
+
+5. Multi Slot Selection ------ #important ###Done
+
+8. Back to Form from Summary ############ Done
+ 
+ 
+ =============
+
+1. Slot view in summary ####### DONE
+
+ 4. Add Schedule
+
+ 7. Thankyou for Registering,  We will send email to you confirming your registration after verification.
+                    - Fix SEntence ####### DONE
+
+ 6. Under 10 - No Money, No Count ############## DONE - backend pending ####### DONE
+
+ 9. registration fees under 10 text ####### DONE
+
+ 10. Additional Top Up ####### DONE
+
+ 11. total amout to pay server  ####### DONE
+    - registeratin_fees & topupcredit / slot ####### DONE
+
+mobile more than 8 ####### DONE
+
+=================================
+
+ui fixes in Lap to be done !!
