@@ -22,18 +22,18 @@ const StepProcess: React.FC = () => {
 	const t = useTranslations("Form");
 	return (
 		<ol className="flex justify-center w-full text-xs text-gray-900 font-medium sm:text-base">
-			<li className="flex w-full relative text-gray-500 justify-center after:content-['']  after:w-full after:h-0.5  after:bg-slate-800 after:inline-block after:absolute after:left-1/2 lg:after:top-5 after:top-3 ">
+			<li className="flex w-full relative text-gray-500 justify-center after:content-['']  after:w-full after:h-0.5  after:bg-orange-600 after:inline-block after:absolute after:left-1/2 lg:after:top-5 after:top-3 ">
 				<div className="block whitespace-nowrap text-wrap text-center z-10">
-					<span className="w-6 h-6 bg-slate-800 border-2 border-transparent rounded-full flex justify-center items-center mx-auto mb-3 text-sm text-white lg:w-10 lg:h-10">
+					<span className="w-6 h-6 bg-orange-600 border-2 border-transparent rounded-full flex justify-center items-center mx-auto mb-3 text-sm text-white lg:w-10 lg:h-10">
 						1
 					</span>{" "}
 					{/* {t("slot_selection")} #2025 */}
 					Accepted T&Cs
 				</div>
 			</li>
-			<li className="flex w-full relative text-slate-800 justify-center  after:content-['']  after:w-full after:h-0.5  after:bg-gray-200 after:inline-block after:absolute lg:after:top-5 after:top-3 after:left-1/2">
+			<li className="flex w-full relative text-orange-600 justify-center  after:content-['']  after:w-full after:h-0.5  after:bg-gray-200 after:inline-block after:absolute lg:after:top-5 after:top-3 after:left-1/2">
 				<div className="block whitespace-nowrap text-wrap text-center z-10">
-					<span className="w-6 h-6 bg-slate-50 border-2 border-slate-800 rounded-full flex justify-center items-center mx-auto mb-3 text-sm text-slate-800 lg:w-10 lg:h-10">
+					<span className="w-6 h-6 bg-orange-50 border-2 border-orange-600 rounded-full flex justify-center items-center mx-auto mb-3 text-sm text-orange-600 lg:w-10 lg:h-10">
 						2
 					</span>{" "}
 					{t("personal_details")}
@@ -293,26 +293,20 @@ const SlotForm = ({ close, setSummary }: any) => {
 
 	return (
 		<>
-			<div className="w-full mx-auto grid grid-cols-3 bg-slate-900">
+			<div className="w-full mx-auto grid grid-cols-3 bg-orange-600">
 				<button
-					className="text-slate-100 px-4 col-start-1"
+					className="text-orange-100 px-4 col-start-1"
 					type="button"
 					onClick={close}
 				>
 					<MdArrowBack />
 				</button>
 				<div className="col-start-2 col-span-1 flex items-center justify-center relative">
-					<Image
-						src="/images/header-logo.png"
-						alt="Kirtan-Ruci-2024"
-						width={250}
-						height={0}
-						className="mx-auto my-3"
-					/>
+					<h1 className="text-base text-white md:text-3xl font-bold my-4 text-nowrap">
+						DDK-Fest 2025
+					</h1>
 				</div>
-				<div className="col-start-3 flex items-center justify-end px-4">
-					<ChangeLang select={true} />
-				</div>
+				<div className="col-start-3 flex w-2 items-center justify-end px-4"></div>
 			</div>
 			<div className="max-w-2xl mx-auto p-4 md:p-6 lg:p-8 bg-white rounded shadow">
 				<div className="flex justify-center items-center pt-2 pb-6">
@@ -320,7 +314,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 				</div>
 				<form onSubmit={handleSubmit}>
 					{locale !== "en" && (
-						<div className="italic text-center text-sm text-slate-600 mb-4">
+						<div className="italic text-center text-sm text-orange-600 mb-4">
 							{t("form_description")}
 						</div>
 					)}
@@ -397,6 +391,10 @@ const SlotForm = ({ close, setSummary }: any) => {
 						>
 							{t("email_address")}
 						</label>
+						<div className="text-gray-500 text-xs italic mb-2">
+							{/* {t("mobile_no_hint")} #2025 */}
+							{`Please enter your personal email ID since confirmation mail will be sent to this address`}
+						</div>
 						<input
 							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 							id="email"
@@ -417,7 +415,8 @@ const SlotForm = ({ close, setSummary }: any) => {
 							{t("mobile_no")}
 						</label>
 						<div className="text-gray-500 text-xs italic mb-2">
-							{t("mobile_no_hint")}
+							{/* {t("mobile_no_hint")} #2025 */}
+							{`Please enter your personal mobile number (excluding the country code)`}
 						</div>
 						<input
 							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -467,7 +466,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 							</div>
 						))}
 						<button
-							className="flex w-full border-2 gap-2 border-dashed border-slate-500 text-slate-800 py-1 px-4 rounded justify-center items-center"
+							className="flex w-full border-2 gap-2 border-dashed border-orange-500 text-orange-600 py-1 px-4 rounded justify-center items-center"
 							type="button"
 							onClick={addMember}
 						>
@@ -478,17 +477,18 @@ const SlotForm = ({ close, setSummary }: any) => {
 							<p className="text-red-500 text-xs italic p-1">{membersError}</p>
 						)}
 					</div>
-					<div className="mb-4">
+					{/* Commented out #2025 */}
+					{/* <div className="mb-4">
 						<h1 className="text block text-gray-700 font-bold mb-2">
 							{t("registration_fees_title")}
 						</h1>
 						<div className="text-gray-500 text-xs italic mb-2">
 							{t("registration_fees_hint")}
 						</div>
-						<div className="border-2 border-slate-800 text-slate-800 py-1 px-4 rounded flex items-center justify-center">
+						<div className="border-2 border-orange-600 text-orange-600 py-1 px-4 rounded flex items-center justify-center">
 							10 KKD
 						</div>
-					</div>
+					</div> */}
 					{/* TOP UP CREDIT - commented out */}
 					{/* <div className="mb-4">
 						<label
@@ -504,7 +504,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 							<button
 								className={`${
 									topUpCredit === "5"
-										? "bg-slate-800 border-2 border-slate-800 text-slate-100"
+										? "bg-orange-600 border-2 border-orange-600 text-orange-100"
 										: "border-2 border-slate-800 text-slate-800"
 								} py-1 px-4 rounded flex items-center justify-center`}
 								onClick={(e) => setTopUpCreditAmount(e, "5")}
@@ -607,7 +607,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 					</div>
 
 					<button
-						className="flex w-full gap-2 bg-slate-800 text-slate-100 py-1 px-4 rounded justify-center items-center"
+						className="flex w-full gap-2 bg-orange-600 text-orange-100 py-1 px-4 rounded justify-center items-center"
 						type="submit"
 						onClick={validateForm}
 					>

@@ -18,7 +18,7 @@ const ConfirmPage: React.FC = () => {
 	const router = useRouter();
 	return (
 		<>
-			<div className="w-full mx-auto grid grid-cols-3 bg-slate-900">
+			<div className="w-full mx-auto grid grid-cols-3 bg-orange-600">
 				<button
 					className="text-slate-100 px-4 col-start-1"
 					type="button"
@@ -27,13 +27,9 @@ const ConfirmPage: React.FC = () => {
 					<MdArrowBack />
 				</button>
 				<div className="col-start-2 col-span-1 flex items-center justify-center relative">
-					<Image
-						src="/images/header-logo.png"
-						alt="Kirtan-Ruci-2024"
-						width={250}
-						height={0}
-						className="mx-auto my-3"
-					/>
+					<h1 className="text-base text-white md:text-3xl font-bold my-4 text-nowrap">
+						DDK-Fest 2025
+					</h1>
 				</div>
 				<div className="col-start-3 flex items-center justify-end px-4">
 					<ChangeLang select={true} />
@@ -47,8 +43,9 @@ const ConfirmPage: React.FC = () => {
 					<h1 className="font-semibold">{t("thank_you")}</h1>
 					<p>
 						{/* {t("thank_you_detail")} #2025 */}
-						You have successfully registered for _EventName_ 2025. Your
-						registration details have been saved.
+						You have successfully registered for DDK-Fest 2025. Your
+						registration details have been saved and confirmation has been sent
+						to your email.
 					</p>
 				</div>
 			</div>

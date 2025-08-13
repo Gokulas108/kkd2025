@@ -78,7 +78,7 @@ export default function App() {
 						<SlotForm
 							close={() => {
 								// setSlot(null);
-								router.push("/registration/terms");
+								router.push("/");
 							}}
 							setSummary={setSummary}
 						/>

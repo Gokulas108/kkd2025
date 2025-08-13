@@ -14,12 +14,12 @@ const space_g = Montserrat({
 });
 
 export const metadata: Metadata = {
-	title: "Kirtan Ruci | 2024",
-	description: "Music & Food Festival",
+	title: "DDK-Fest | 2025",
+	description: "Dance Drama & Kirtan Festival 2025",
 };
 
 export const viewport: Viewport = {
-	themeColor: "0f172a",
+	themeColor: "#f54a00",
 };
 
 export default function RootLayout(
