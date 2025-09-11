@@ -143,8 +143,6 @@ export async function sendEmail({ summary }: any) {
             <h2 style="color: #0056b3; margin-top: 0;">Welcome!</h2>
 
             <!-- Event Details -->
-			<p><strong>Mala:</strong> ${summary.mala}</p>
-			<p><strong>Chakra:</strong> ${summary.chakra}</p>
             <p><strong>Event Date:</strong> ${eventDate}</p>
 
             <p>Thank you for registering for the event. The following members have been successfully registered:</p>
