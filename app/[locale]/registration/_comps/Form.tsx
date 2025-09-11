@@ -687,7 +687,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 						</label>
 						<div className="text-gray-500 text-xs italic mb-2">
 							{/* {t("mobile_no_hint")} #2025 */}
-							{`Please enter your personal email ID`}
+							{`Please enter your personal email ID since confirmation mail will be sent to this address`}
 						</div>
 						<input
 							className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

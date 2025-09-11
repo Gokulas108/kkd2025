@@ -108,9 +108,16 @@ export async function submitForm({ summary, slots, lang }: any) {
 export async function sendEmail({ summary }: any) {
 	// Create a Nodemailer transporter using Gmail
 
+	const dateMapping: { [key: string]: string } = {
+		nimai: "12th December 2025",
+		nitai: "19th December 2025",
+		vaijayanthi: "5th December 2025",
+		tulasi: "26th December 2025",
+	};
+
 	const url = summary.email || "";
 	const to = url.trim();
-	let eventDate = "June 15-17, 2025"; // Replace with your actual event date
+	let eventDate = dateMapping[summary.url_mala] || ""; // Replace with your actual event date
 
 	let membersList = summary.members
 		.map((member: any) => `<li>${member.name} (Age: ${member.age})</li>`)
@@ -136,6 +143,8 @@ export async function sendEmail({ summary }: any) {
             <h2 style="color: #0056b3; margin-top: 0;">Welcome!</h2>
 
             <!-- Event Details -->
+			<p><strong>Mala:</strong> ${summary.mala}</p>
+			<p><strong>Chakra:</strong> ${summary.chakra}</p>
             <p><strong>Event Date:</strong> ${eventDate}</p>
 
             <p>Thank you for registering for the event. The following members have been successfully registered:</p>
@@ -150,8 +159,7 @@ export async function sendEmail({ summary }: any) {
         <!-- Footer -->
         <tr>
           <td style="background-color: #f0f0f0; color: #555; text-align: center; font-size: 12px; padding: 15px;">
-            <p style="margin: 0;">For any questions, please contact us at <a href="mailto:info@ddkfest.com" style="color: #0056b3; text-decoration: none;">info@ddkfest.com</a></p>
-            <p style="margin: 0;">&copy; 2025 DDK Fest. All rights reserved.</p>
+            <p style="margin: 0;">For any questions, please contact us at <a href="mailto:kkd.sdo@gmail.com" style="color: #0056b3; text-decoration: none;">kkd.sdo@gmail.com</a></p>
           </td>
         </tr>
 

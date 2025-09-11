@@ -219,6 +219,10 @@ const Summary = ({ summary, slot, close }: any) => {
 								</tfoot>
 							</table>
 						)}
+						<p className="text-xs text-center text-gray-500 italic">
+							To complete the registration, please pay a fee of{" "}
+							<strong>10 KKD per member</strong> to your respective Chakrapathi
+						</p>
 						<div className=" border-b border border-dashed"></div>
 						<div className="py-4 justify-center items-center flex flex-col gap-2">
 							<button
