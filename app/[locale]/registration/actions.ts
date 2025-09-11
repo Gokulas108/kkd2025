@@ -100,19 +100,66 @@ export async function submitForm({ summary, slots, lang }: any) {
 	}
 
 	console.log("Data inserted successfully:", data);
+	await sendEmail({ summary });
 
 	redirect("/registration/confirm?mala=" + summary.url_mala);
 }
 
-export async function sendEmail({ to }: any) {
+export async function sendEmail({ summary }: any) {
 	// Create a Nodemailer transporter using Gmail
 
-	const url = to || "";
-	let text = "";
+	const url = summary.email || "";
+	const to = url.trim();
+	let eventDate = "June 15-17, 2025"; // Replace with your actual event date
 
-	const qrCodeImage = await QRCode.toDataURL(url);
-	text = `<div><h3>Please Show this QR Code at the Entrance!</h3><br/><img src="cid:qrImage"/></div>`;
-	console.log(qrCodeImage);
+	let membersList = summary.members
+		.map((member: any) => `<li>${member.name} (Age: ${member.age})</li>`)
+		.join("");
+
+	let text = `
+<table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px;">
+  <tr>
+    <td align="center">
+      <!-- Main Container -->
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+        
+        <!-- Header Banner -->
+        <tr>
+          <td style="background-color: #0056b3; color: #ffffff; text-align: center; padding: 20px;">
+            <h1 style="margin: 0; font-size: 24px;">DDK Fest 2025</h1>
+          </td>
+        </tr>
+        
+        <!-- Body Content -->
+        <tr>
+          <td style="padding: 20px;">
+            <h2 style="color: #0056b3; margin-top: 0;">Welcome!</h2>
+
+            <!-- Event Details -->
+            <p><strong>Event Date:</strong> ${eventDate}</p>
+
+            <p>Thank you for registering for the event. The following members have been successfully registered:</p>
+            <ul style="padding-left: 20px; margin-top: 10px; margin-bottom: 20px;">
+              ${membersList}
+            </ul>
+            <p>We look forward to your participation and hope you have an enjoyable experience at DDK Fest 2025.</p>
+            <p style="margin-top: 30px;">Best regards,<br><em>The DDK Fest Team</em></p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background-color: #f0f0f0; color: #555; text-align: center; font-size: 12px; padding: 15px;">
+            <p style="margin: 0;">For any questions, please contact us at <a href="mailto:info@ddkfest.com" style="color: #0056b3; text-decoration: none;">info@ddkfest.com</a></p>
+            <p style="margin: 0;">&copy; 2025 DDK Fest. All rights reserved.</p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+`;
 
 	let transporter = nodemailer.createTransport({
 		service: "gmail",
@@ -126,15 +173,8 @@ export async function sendEmail({ to }: any) {
 	let mailOptions = {
 		from: process.env.GMAIL_USER,
 		to,
-		subject: "Welcome To Music & Food Festival 2024",
+		subject: "Registration Confirmation for DDK Fest 2025",
 		html: text,
-		attachments: [
-			{
-				// data uri as an attachment
-				path: qrCodeImage,
-				cid: "qrImage",
-			},
-		],
 	};
 
 	try {
