@@ -17,10 +17,6 @@ const Page = () => {
 		}
 	}, [mala, router]);
 
-	if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
-		return null; // render nothing while redirecting
-	}
-
 	const handleRegisterClick = () => {
 		setLoading(true);
 		router.push("/registration?mala=" + mala);
@@ -39,6 +35,10 @@ const Page = () => {
 		vaijayanthi: "5th December 2025",
 		tulasi: "26th December 2025",
 	};
+
+	if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
+		return null; // render nothing while redirecting
+	}
 
 	return (
 		<>

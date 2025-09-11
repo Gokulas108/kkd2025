@@ -61,17 +61,13 @@ const SlotForm = ({ close, setSummary }: any) => {
 	const router = useRouter();
 
 	const mala = searchParams.get("mala");
-	// if mala is not present or not valid in url, redirect to /[locale]/error
-	// valid values: nimai, nitai, vaijayanthi, tulasi
+
 	useEffect(() => {
 		if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
 			router.push("/error");
 		}
 	}, [mala, router]);
 
-	if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
-		return null; // render nothing while redirecting
-	}
 	const malaNameMapping: { [key: string]: string } = {
 		nimai: "Nimai mala",
 		nitai: "Nitai mala",
@@ -377,7 +373,7 @@ const SlotForm = ({ close, setSummary }: any) => {
 	];
 
 	const sortedChakras = chakrasFlat.filter(
-		(c) => c.mala === malaNameMapping[mala]
+		(c) => c.mala === malaNameMapping[mala || ""]
 	);
 
 	useEffect(() => {
@@ -582,6 +578,12 @@ const SlotForm = ({ close, setSummary }: any) => {
 			);
 		}
 	};
+
+	// if mala is not present or not valid in url, redirect to /[locale]/error
+	// valid values: nimai, nitai, vaijayanthi, tulasi
+	if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
+		return null; // render nothing while redirecting
+	}
 
 	return (
 		<>
