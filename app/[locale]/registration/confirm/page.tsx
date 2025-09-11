@@ -6,7 +6,7 @@ import ChangeLang from "@/app/_components/ChangeLang";
 import { Pacifico } from "next/font/google";
 import { MdArrowBack } from "react-icons/md";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const font = Pacifico({
 	weight: ["400"], // Add all the available font weights
@@ -15,6 +15,8 @@ const font = Pacifico({
 
 const ConfirmPage: React.FC = () => {
 	const t = useTranslations("Form");
+	const searchParams = useSearchParams();
+	const mala = searchParams.get("mala");
 	const router = useRouter();
 	return (
 		<>
@@ -22,7 +24,7 @@ const ConfirmPage: React.FC = () => {
 				<button
 					className="text-slate-100 px-4 col-start-1"
 					type="button"
-					onClick={() => router.push("/")}
+					onClick={() => router.push("/?mala=" + mala || "")}
 				>
 					<MdArrowBack />
 				</button>

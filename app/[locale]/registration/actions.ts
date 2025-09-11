@@ -71,6 +71,11 @@ export async function submitForm({ summary, slots, lang }: any) {
 			phone_no: summary.phone_no,
 			email: summary.email.trim(),
 			chakra: summary.chakra,
+			mala: summary.mala,
+			malapathi: summary.malapathi,
+			mahachakrapathi: summary.maha,
+			chakrapathi: summary.chakrapathi,
+			// chakra_id: summary.chakra_id, // #2025
 			volunteer: member?.volunteer ? "Yes" : "No",
 			// topUpCredit, #2025
 			fees: registration_fees,
@@ -83,7 +88,7 @@ export async function submitForm({ summary, slots, lang }: any) {
 
 	// if it contains null return 400
 	if (toInsert.includes(null)) {
-		redirect("/error");
+		redirect("/error?mala=" + summary.url_mala);
 	}
 
 	// Insert the summary data into the database
@@ -91,12 +96,12 @@ export async function submitForm({ summary, slots, lang }: any) {
 
 	if (error) {
 		console.error("Error inserting data:", error);
-		redirect("/error");
+		redirect("/error?mala=" + summary.url_mala);
 	}
 
 	console.log("Data inserted successfully:", data);
 
-	redirect("/registration/confirm");
+	redirect("/registration/confirm?mala=" + summary.url_mala);
 }
 
 export async function sendEmail({ to }: any) {

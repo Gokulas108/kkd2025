@@ -4,7 +4,7 @@ import ChangeLang from "@/app/_components/ChangeLang";
 import { Pacifico } from "next/font/google";
 import { FaN } from "react-icons/fa6";
 import { MdArrowBack, MdNavigateNext } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 const font = Pacifico({
@@ -83,6 +83,8 @@ const App = ({ setSS, slotNumbers }: any) => {
 	const ft = useTranslations("Form");
 	const [activeSlot, setActiveSlot] = useState<any>(null);
 	const [selectedSlots, setSelectedSlots] = useState<any>([]);
+	const searchParams = useSearchParams();
+	const mala = searchParams.get("mala");
 	const router = useRouter();
 	const FRI_SLOTS_1 = 100;
 	const FRI_SLOTS_2 = 150;
@@ -125,7 +127,7 @@ const App = ({ setSS, slotNumbers }: any) => {
 				<button
 					className="text-slate-100 px-4 col-start-1"
 					type="button"
-					onClick={() => router.push("/")}
+					onClick={() => router.push("/?mala=" + mala || "")}
 				>
 					<MdArrowBack />
 				</button>

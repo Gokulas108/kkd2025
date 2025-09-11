@@ -6,6 +6,8 @@ import ChangeLang from "../../../_components/ChangeLang";
 import { FaCheck, FaInfo, FaPlus } from "react-icons/fa";
 import { useLocale } from "next-intl";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 
 const font = Pacifico({
 	weight: ["400"], // Add all the available font weights
@@ -28,7 +30,7 @@ const StepProcess: React.FC = () => {
 						1
 					</span>{" "}
 					{/* {t("slot_selection")} #2025 */}
-					Accepted T&Cs
+					Start Registration
 				</div>
 			</li>
 			<li className="flex w-full relative text-orange-600 justify-center  after:content-['']  after:w-full after:h-0.5  after:bg-gray-200 after:inline-block after:absolute lg:after:top-5 after:top-3 after:left-1/2">
@@ -55,6 +57,27 @@ const SlotForm = ({ close, setSummary }: any) => {
 	const t = useTranslations("Form");
 	const ct = useTranslations("chakras");
 	const locale = useLocale();
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
+	const mala = searchParams.get("mala");
+	// if mala is not present or not valid in url, redirect to /[locale]/error
+	// valid values: nimai, nitai, vaijayanthi, tulasi
+	useEffect(() => {
+		if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
+			router.push("/error");
+		}
+	}, [mala, router]);
+
+	if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
+		return null; // render nothing while redirecting
+	}
+	const malaNameMapping: { [key: string]: string } = {
+		nimai: "Nimai mala",
+		nitai: "Nitai mala",
+		vaijayanthi: "Vaijayanthi mala",
+		tulasi: "Tulasi mala",
+	};
 
 	const [name, setName] = useState("");
 	const [nameError, setNameError] = useState("");
@@ -73,27 +96,289 @@ const SlotForm = ({ close, setSummary }: any) => {
 	const [volunteers, setVolunteers] = useState<any>([]);
 	const [volunteer, setVolunteer] = useState(false);
 
-	const chakras =
-		"Jagannath Puri, Ram keli, Simantha, Kola, Sri Kashi Dham, Ekachakra, Godruma, Sri Adi Kesava Dham, Ritu, Mamgachi, Modadruma, Pundarik Dham, Ayodhya, Guruvayoor Dham, Keturi Dham, Srivas Angan, Rudra, Antar dwip, Radhakund, Nawadwip, Badrika Ashram, Sri Ranga Dham Chakra, Nilachal, Prayag, Ahobilam, Madhya, Govardhan Giri, Gupta Gokul dham, Janu Dwip, Ananta Padmanaba, Sri Punarthirtha Dham";
-	const chakraList = chakras.split(", ");
-	const translatedChakras = ct("chakra_list").split(", ");
+	// #2025 const chakras =
+	// 	"Jagannath Puri, Ram keli, Simantha, Kola, Sri Kashi Dham, Ekachakra, Godruma, Sri Adi Kesava Dham, Ritu, Mamgachi, Modadruma, Pundarik Dham, Ayodhya, Guruvayoor Dham, Keturi Dham, Srivas Angan, Rudra, Antar dwip, Radhakund, Nawadwip, Badrika Ashram, Sri Ranga Dham Chakra, Nilachal, Prayag, Ahobilam, Madhya, Govardhan Giri, Gupta Gokul dham, Janu Dwip, Ananta Padmanaba, Sri Punarthirtha Dham";
+	// const chakraList = chakras.split(", ");
+	// const translatedChakras = ct("chakra_list").split(", ");
 
-	const chakraMap = chakraList.reduce(
-		(acc: { [key: string]: string }, chakra: string, index: number) => {
-			acc[chakra] = translatedChakras[index];
-			return acc;
+	// const chakraMap = chakraList.reduce(
+	// 	(acc: { [key: string]: string }, chakra: string, index: number) => {
+	// 		acc[chakra] = translatedChakras[index];
+	// 		return acc;
+	// 	},
+	// 	{}
+	// );
+	// const sortedChakras = Object.keys(chakraMap)
+	// 	.sort()
+	// 	.reduce(
+	// 		(acc, key) => ({
+	// 			...acc,
+	// 			[key]: chakraMap[key],
+	// 		}),
+	// 		{}
+	// 	);
+
+	const chakrasFlat = [
+		// Tulasi mala
+		{
+			id: 1,
+			chakra: "Antar dwip",
+			mala: "Tulasi mala",
+			maha: "Rasa sagar Ramdas",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Gayatri Mataji",
 		},
-		{}
+		{
+			id: 2,
+			chakra: "Nawadwip",
+			mala: "Tulasi mala",
+			maha: "Rasa sagar Ramdas",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Sankapani pr",
+		},
+		{
+			id: 3,
+			chakra: "Radhakund",
+			mala: "Tulasi mala",
+			maha: "Rasa sagar Ramdas",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Durga prasad pr",
+		},
+		{
+			id: 4,
+			chakra: "Modadruma",
+			mala: "Tulasi mala",
+			maha: "Premdata Gopinath Das",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Karthikeshwara das",
+		},
+		{
+			id: 5,
+			chakra: "Mamgachi",
+			mala: "Tulasi mala",
+			maha: "Premdata Gopinath Das",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Suresa Sripathi das",
+		},
+		{
+			id: 6,
+			chakra: "Godruma",
+			mala: "Tulasi mala",
+			maha: "Sanatan Rishi Das",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Venu gopal",
+		},
+		{
+			id: 7,
+			chakra: "Jagannath Puri",
+			mala: "Tulasi mala",
+			maha: "Sanatan Rishi Das",
+			malapathi: "Shiromoni Gaura das",
+			chakrapathi: "Mahaprabhu Manahar Das",
+		},
+
+		// Vaijayanthi mala
+		{
+			id: 8,
+			chakra: "Kola",
+			mala: "Vaijayanthi mala",
+			maha: "Chandramukha Ram das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Krishna Damodar",
+		},
+		{
+			id: 9,
+			chakra: "Sri Ranga Dham Chakra",
+			mala: "Vaijayanthi mala",
+			maha: "Chandramukha Ram das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Sarvananda Gauhari Das",
+		},
+		{
+			id: 10,
+			chakra: "Ekachakra",
+			mala: "Vaijayanthi mala",
+			maha: "Chandramukha Ram das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Krishna Chandra Das",
+		},
+		{
+			id: 11,
+			chakra: "Badrika Ashram",
+			mala: "Vaijayanthi mala",
+			maha: "Chandramukha Ram das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Kesava krsna kishore das",
+		},
+		{
+			id: 12,
+			chakra: "Rudra",
+			mala: "Vaijayanthi mala",
+			maha: "Bahukaruna Nitai Das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Jayagopal Krishna Das",
+		},
+		{
+			id: 13,
+			chakra: "Govardhan Giri",
+			mala: "Vaijayanthi mala",
+			maha: "Bahukaruna Nitai Das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Merged with Rudra",
+		},
+		{
+			id: 14,
+			chakra: "Ananta Padmanaba",
+			mala: "Vaijayanthi mala",
+			maha: "Bahukaruna Nitai Das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Sucaru Jahnava DD & Pr",
+		},
+		{
+			id: 15,
+			chakra: "Ahobilam",
+			mala: "Vaijayanthi mala",
+			maha: "Sanjay Gaura Das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Raja Rao",
+		},
+		{
+			id: 16,
+			chakra: "Ritu",
+			mala: "Vaijayanthi mala",
+			maha: "Sanjay Gaura Das",
+			malapathi: "Raghuram Lakshman das",
+			chakrapathi: "Dayanidhi Dinesh Das",
+		},
+
+		// Nimai mala
+		{
+			id: 17,
+			chakra: "Sri Punarthirtha Dham",
+			mala: "Nimai mala",
+			maha: "Nirmal Gaura das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Sachiputra Vishrup das",
+		},
+		{
+			id: 18,
+			chakra: "Srivas Angan",
+			mala: "Nimai mala",
+			maha: "Nirmal Gaura das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Joy Nitai Chandra Das",
+		},
+		{
+			id: 19,
+			chakra: "Pundarik Dham",
+			mala: "Nimai mala",
+			maha: "Susanto Brajesh Das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Haricharan Tulasi Das",
+		},
+		{
+			id: 20,
+			chakra: "Gupta Gokul dham",
+			mala: "Nimai mala",
+			maha: "Susanto Brajesh Das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Padmanetra Murari pr",
+		},
+		{
+			id: 21,
+			chakra: "Madhya",
+			mala: "Nimai mala",
+			maha: "Susanto Brajesh Das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Sujan Mazumdar",
+		},
+		{
+			id: 22,
+			chakra: "Simantha",
+			mala: "Nimai mala",
+			maha: "Sudhama Das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Giriraj Goverdan das",
+		},
+		{
+			id: 23,
+			chakra: "Nilachal",
+			mala: "Nimai mala",
+			maha: "Sudhama Das",
+			malapathi: "Padmanabha Nitai Das",
+			chakrapathi: "Narnarayan pr",
+		},
+
+		// Nitai mala
+		{
+			id: 24,
+			chakra: "Keturi Dham",
+			mala: "Nitai mala",
+			maha: "Anupam Kanai Das",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Praphulla Padmanabha",
+		},
+		{
+			id: 25,
+			chakra: "Ram keli",
+			mala: "Nitai mala",
+			maha: "Anupam Kanai Das",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Srinivasa Kumar Das",
+		},
+		{
+			id: 26,
+			chakra: "Janu Dwip",
+			mala: "Nitai mala",
+			maha: "Anupam Kanai Das",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Asutosh",
+		},
+		{
+			id: 27,
+			chakra: "Ayodhya",
+			mala: "Nitai mala",
+			maha: "Gobinda Gopal das",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Navaneet Taskar Das",
+		},
+		{
+			id: 28,
+			chakra: "Guruvayoor Dham",
+			mala: "Nitai mala",
+			maha: "Gobinda Gopal das",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Bindumati Radha DD",
+		},
+		{
+			id: 29,
+			chakra: "Sri Kashi Dham",
+			mala: "Nitai mala",
+			maha: "To be updated",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Nityananda Nilambara das",
+		},
+		{
+			id: 30,
+			chakra: "Sri Adi Kesava Dham",
+			mala: "Nitai mala",
+			maha: "To be updated",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "-",
+		},
+		{
+			id: 31,
+			chakra: "Prayag",
+			mala: "Nitai mala",
+			maha: "To be updated",
+			malapathi: "Shivnath Ramdas",
+			chakrapathi: "Namarupa gopal",
+		},
+	];
+
+	const sortedChakras = chakrasFlat.filter(
+		(c) => c.mala === malaNameMapping[mala]
 	);
-	const sortedChakras = Object.keys(chakraMap)
-		.sort()
-		.reduce(
-			(acc, key) => ({
-				...acc,
-				[key]: chakraMap[key],
-			}),
-			{}
-		);
 
 	useEffect(() => {
 		// Scroll to the top of the page when the component is mounted
@@ -185,12 +470,19 @@ const SlotForm = ({ close, setSummary }: any) => {
 
 			console.log("Form data:", phone_no, email, new_members, topUpCredit);
 
+			let chakraobj = sortedChakras.find((c) => c.id.toString() === chakra);
+
 			setSummary({
 				phone_no,
 				email,
 				members: new_members,
 				topUpCredit,
-				chakra,
+				chakra: chakraobj?.chakra,
+				mala: chakraobj?.mala,
+				maha: chakraobj?.maha,
+				malapathi: chakraobj?.malapathi,
+				chakrapathi: chakraobj?.chakrapathi,
+				url_mala: mala,
 			});
 		}
 	};
@@ -373,9 +665,9 @@ const SlotForm = ({ close, setSummary }: any) => {
 							<option className="" value="">
 								{t("select_chakra")}
 							</option>
-							{Object.entries(sortedChakras).map(([key, value]) => (
-								<option key={key} value={key}>
-									{value as React.ReactNode}
+							{sortedChakras.map((chakra) => (
+								<option key={chakra.id} value={chakra.id}>
+									{chakra.chakra as React.ReactNode}
 								</option>
 							))}
 						</select>

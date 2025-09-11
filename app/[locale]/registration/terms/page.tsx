@@ -3,7 +3,7 @@ import React, { useState, type JSX } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Pacifico } from "next/font/google";
 import ChangeLang from "@/app/_components/ChangeLang";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MdArrowBack } from "react-icons/md";
 import Image from "next/image";
 
@@ -17,11 +17,13 @@ const Page = () => {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 	const locale = useLocale();
+	const searchParams = useSearchParams();
+	const mala = searchParams.get("mala");
 
 	//function to navigate to "/registaion" page
 	const navigateToRegistration = () => {
 		setLoading(true);
-		router.push("/registration");
+		router.push("/registration?mala=" + mala);
 	};
 
 	const EnglishBlock = () => (
@@ -479,7 +481,7 @@ const Page = () => {
 				<button
 					className="text-slate-100 px-4 col-start-1"
 					type="button"
-					onClick={() => router.push("/")}
+					onClick={() => router.push("/?mala=" + mala || "")}
 				>
 					<MdArrowBack />
 				</button>

@@ -78,7 +78,13 @@ export default function App() {
 						<SlotForm
 							close={() => {
 								// setSlot(null);
-								router.push("/");
+								// #2025
+								router.push(
+									"/?mala=" +
+										(typeof window !== "undefined"
+											? new URLSearchParams(window.location.search).get("mala")
+											: "")
+								);
 							}}
 							setSummary={setSummary}
 						/>

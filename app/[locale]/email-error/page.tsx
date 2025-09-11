@@ -2,18 +2,20 @@
 import React from "react";
 import { MdArrowBack, MdError } from "react-icons/md";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ChangeLang from "@/app/_components/ChangeLang";
 
 const Page = () => {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const mala = searchParams.get("mala");
 	return (
 		<div className="flex flex-col items-center justify-start gap-3 h-screen">
 			<div className="w-full mx-auto grid grid-cols-3 bg-slate-900">
 				<button
 					className="text-slate-100 px-4 col-start-1"
 					type="button"
-					onClick={() => router.push("/")}
+					onClick={() => router.push("/?mala=" + mala || "")}
 				>
 					<MdArrowBack />
 				</button>
