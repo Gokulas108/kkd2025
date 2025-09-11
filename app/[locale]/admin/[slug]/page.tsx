@@ -61,15 +61,15 @@ function ExportCSV({ rows }: { rows: any[] }) {
 			"name",
 			"age",
 			"volunteer",
-			"chakra",
 			"email",
 			"phone_no",
+			"chakra",
+			"chakrapathi",
+			"mahachakrapathi",
+			"malapathi",
+			"mala",
 			"fees",
 			"created_at",
-			"mala",
-			"malapathi",
-			"mahachakrapathi",
-			"chakrapathi",
 		];
 		// Prepare data for SheetJS
 		const data = [
@@ -118,7 +118,7 @@ const columns = [
 	{ key: "chakra", label: "Chakra" },
 	{ key: "chakrapathi", label: "Chakrapathi" },
 	{ key: "mahachakrapathi", label: "Mahachakrapathi" },
-	{ key: "malapathi", label: "Malapathi" },
+	// { key: "malapathi", label: "Malapathi" },
 	{ key: "fees", label: "Fees" },
 	{ key: "created_at", label: "Created At" },
 ];
@@ -157,11 +157,20 @@ const Page = () => {
 		tulasi: "1016",
 	};
 
+	const malapathiMapping = {
+		nimai: "Padmanabha Nitai Das",
+		nitai: "Shivnath Ramdas",
+		vaijayanthi: "Raghuram Lakshman das",
+		tulasi: "Shiromoni Gaura das",
+	};
+
 	const correctPin: string =
 		pinMapping[slug as keyof typeof pinMapping] || "2025";
 
 	useEffect(() => {
 		if (locked) return;
+		// scroll to top
+		window.scrollTo(0, 0);
 		if (!validSlugs.includes(slug)) {
 			router.push("/error");
 			return;
@@ -238,8 +247,11 @@ const Page = () => {
 		<div className="flex flex-col items-center justify-start gap-1 min-h-screen bg-gray-50">
 			<div className="w-full mx-auto grid grid-cols-3 bg-orange-600 h-12 items-center">
 				<div className="col-start-2 col-span-1 flex items-center justify-center relative">
-					<h1 className="text-sm text-white font-bold text-nowrap">
-						Admin - {malaNameMapping[slug]}
+					<h1 className="text-xs sm:text-sm text-white font-bold text-nowrap">
+						{malaNameMapping[slug as keyof typeof malaNameMapping]}{" "}
+						{`(${
+							malapathiMapping[slug as keyof typeof malapathiMapping] || ""
+						})`}
 					</h1>
 				</div>
 				<div className="col-start-3 flex items-center justify-end px-2">
@@ -249,13 +261,16 @@ const Page = () => {
 			<div className="flex flex-col justify-center gap-1 bg-white rounded-lg p-2 w-full max-w-6xl shadow">
 				<div className="flex flex-col md:flex-row gap-1 items-center justify-between mb-1">
 					<span className="text-xs font-semibold">Total: {count ?? 0}</span>
-					<form className="flex gap-1" onSubmit={handleSearch}>
+					<form
+						className="flex gap-1 flex-wrap w-full max-w-md"
+						onSubmit={handleSearch}
+					>
 						<input
 							name="search"
 							value={pendingSearch}
 							onChange={(e) => setPendingSearch(e.target.value)}
 							placeholder="Search Database"
-							className="border px-2 py-1 rounded text-xs w-80"
+							className="border px-2 py-1 rounded text-xs w-40 sm:w-80 flex-1 min-w-0"
 						/>
 						<button
 							type="submit"

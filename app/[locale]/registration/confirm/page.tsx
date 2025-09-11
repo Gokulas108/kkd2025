@@ -46,8 +46,9 @@ const ConfirmPage: React.FC = () => {
 					<p>
 						{/* {t("thank_you_detail")} #2025 */}
 						You have successfully registered for DDK-Fest 2025. Your
-						registration details have been saved and confirmation has been sent
-						to your email.
+						registration details have been saved.
+						{/* and confirmation has been sent
+						to your email. */}
 					</p>
 				</div>
 			</div>
