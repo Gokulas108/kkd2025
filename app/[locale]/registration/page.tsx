@@ -16,30 +16,9 @@ import { useRouter } from "next/navigation";
  */
 
 /* Utility: create a token valid for `validHours` hours from now */
-export function createRegistrationToken(validHours = 24): string {
-	const now = Date.now();
-	const payload = { iat: now, exp: now + validHours * 60 * 60 * 1000 };
-	// encodeURIComponent to make it safe for use in URLs
-	return encodeURIComponent(
-		typeof window !== "undefined"
-			? btoa(JSON.stringify(payload))
-			: Buffer.from(JSON.stringify(payload)).toString("base64")
-	);
-}
-
-/* Utility: create a full link to /registration with token (uses current origin when available) */
-export function createRegistrationLink(
-	validHours = 24,
-	path = "/registration"
-): string {
-	const token = createRegistrationToken(validHours);
-	const origin = typeof window !== "undefined" ? window.location.origin : "";
-	// If origin is empty (server-side), return relative path
-	return origin ? `${origin}${path}?token=${token}` : `${path}?token=${token}`;
-}
 
 /* Utility: validate token (returns true if token is present and unexpired) */
-export function isTokenValid(token: string | null | undefined): boolean {
+function isTokenValid(token: string | null | undefined): boolean {
 	if (!token) return false;
 	try {
 		const decoded = JSON.parse(

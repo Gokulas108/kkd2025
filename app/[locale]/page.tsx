@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
 
-export function isTokenValid(token: string | null | undefined): boolean {
+function isTokenValid(token: string | null | undefined): boolean {
 	if (!token) return false;
 	try {
 		const decoded = JSON.parse(

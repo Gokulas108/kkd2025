@@ -15,7 +15,7 @@ const malaNameMapping: { [key: string]: string } = {
 
 const validSlugs = Object.keys(malaNameMapping);
 
-export function createRegistrationToken(validHours = 24): string {
+function createRegistrationToken(validHours = 24): string {
 	const now = Date.now();
 	const payload = { iat: now, exp: now + validHours * 60 * 60 * 1000 };
 	// encodeURIComponent to make it safe for use in URLs
