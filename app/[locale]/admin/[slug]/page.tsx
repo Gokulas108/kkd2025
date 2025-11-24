@@ -15,6 +15,17 @@ const malaNameMapping: { [key: string]: string } = {
 
 const validSlugs = Object.keys(malaNameMapping);
 
+export function createRegistrationToken(validHours = 24): string {
+	const now = Date.now();
+	const payload = { iat: now, exp: now + validHours * 60 * 60 * 1000 };
+	// encodeURIComponent to make it safe for use in URLs
+	return encodeURIComponent(
+		typeof window !== "undefined"
+			? btoa(JSON.stringify(payload))
+			: Buffer.from(JSON.stringify(payload)).toString("base64")
+	);
+}
+
 async function getData(
 	slug: string,
 	search: string,
@@ -150,6 +161,12 @@ const Page = () => {
 	const [pin, setPin] = useState("");
 	const [pinError, setPinError] = useState("");
 
+	const [showLinkModal, setShowLinkModal] = useState(false);
+	const [linkHours, setLinkHours] = useState<string>("24");
+	const [generatedLink, setGeneratedLink] = useState<string>("");
+	const [linkError, setLinkError] = useState<string>("");
+	const [copied, setCopied] = useState<boolean>(false);
+
 	const pinMapping = {
 		nimai: "1618",
 		nitai: "1018",
@@ -162,6 +179,19 @@ const Page = () => {
 		nitai: "Shivnath Ramdas",
 		vaijayanthi: "Raghuram Lakshman das",
 		tulasi: "Shiromoni Gaura das",
+	};
+
+	/* Utility: create a full link to /registration with token (uses current origin when available) */
+	const createRegistrationLink = (
+		validHours = 24,
+		path = `?mala=${slug}`
+	): string => {
+		const token = createRegistrationToken(validHours);
+		const origin = typeof window !== "undefined" ? window.location.origin : "";
+		// If origin is empty (server-side), return relative path
+		return origin
+			? `${origin}${path}&token=${token}`
+			: `${path}&token=${token}`;
 	};
 
 	const correctPin: string =
@@ -290,6 +320,134 @@ const Page = () => {
 						</button>
 					</form>
 					<ExportCSV rows={data || []} />
+					<>
+						{/* Generate registration link modal */}
+						<div className="flex items-center gap-2">
+							<button
+								className="bg-white border-orange-50 border-2 text-orange-500 px-2 py-0.5 rounded text-xs"
+								onClick={() => setShowLinkModal(true)}
+							>
+								Create Temporary Link
+							</button>
+						</div>
+						{showLinkModal && (
+							<div
+								className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+								role="dialog"
+								aria-modal="true"
+								onKeyDown={(e) => {
+									if (e.key === "Escape") setShowLinkModal(false);
+								}}
+							>
+								<div className="bg-white rounded-lg shadow-lg max-w-md w-full p-4">
+									<div className="flex items-center justify-between mb-3">
+										<h3 className="text-sm font-semibold text-orange-600">
+											Create registration link
+										</h3>
+										<button
+											className="text-gray-500 text-sm"
+											onClick={() => setShowLinkModal(false)}
+											aria-label="Close"
+										>
+											Close
+										</button>
+									</div>
+
+									<label className="block text-xs mb-1">
+										Valid for (hours)
+									</label>
+									<input
+										type="number"
+										min={1}
+										value={linkHours}
+										onChange={(e) => setLinkHours(e.target.value)}
+										className="border px-2 py-1 rounded w-full mb-2 text-sm"
+									/>
+									{linkError && (
+										<div className="text-red-500 text-xs mb-2">{linkError}</div>
+									)}
+
+									<div className="flex gap-2 mb-3">
+										<button
+											className="bg-orange-500 text-white px-3 py-1 rounded text-sm"
+											onClick={async () => {
+												const hrs = Number(linkHours);
+												if (!Number.isFinite(hrs) || hrs <= 0) {
+													setLinkError("Enter a valid number of hours");
+													return;
+												}
+												setLinkError("");
+												const generated = createRegistrationLink(hrs);
+												setGeneratedLink(generated);
+												try {
+													await navigator.clipboard.writeText(generated);
+													setCopied(true);
+													setTimeout(() => setCopied(false), 5000);
+												} catch {
+													// clipboard may fail on insecure contexts; still show link
+													setCopied(false);
+												}
+											}}
+										>
+											Generate & Copy
+										</button>
+										<button
+											className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm"
+											onClick={() => {
+												setLinkHours("24");
+												setGeneratedLink("");
+												setLinkError("");
+											}}
+										>
+											Reset
+										</button>
+									</div>
+
+									{generatedLink && (
+										<div className="flex flex-col gap-2">
+											<label className="text-xs">Link</label>
+											<div className="flex gap-2">
+												<input
+													readOnly
+													className="border px-2 py-1 rounded text-xs flex-1"
+													value={generatedLink}
+												/>
+												<button
+													className="bg-white border-orange-50 border-2 text-orange-500 px-2 py-0.5 rounded text-xs"
+													onClick={async () => {
+														try {
+															await navigator.clipboard.writeText(
+																generatedLink
+															);
+															setCopied(true);
+															setTimeout(() => setCopied(false), 5000);
+														} catch {
+															setCopied(false);
+														}
+													}}
+												>
+													Copy
+												</button>
+											</div>
+											{copied && (
+												<div className="text-green-600 text-xs">
+													Copied to clipboard
+												</div>
+											)}
+										</div>
+									)}
+								</div>
+							</div>
+						)}
+						{/* add these useState hooks near top of component (place them with other hooks) */}
+						{/* 
+						const [showLinkModal, setShowLinkModal] = useState(false);
+						const [linkHours, setLinkHours] = useState<string>("24");
+						const [generatedLink, setGeneratedLink] = useState<string>("");
+						const [linkError, setLinkError] = useState<string>("");
+						const [copied, setCopied] = useState<boolean>(false);
+						*/}
+					</>
 				</div>
 				{error && <ErrorMsg error={error} />}
 				{loading ? (

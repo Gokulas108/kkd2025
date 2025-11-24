@@ -4,9 +4,28 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
+
+export function isTokenValid(token: string | null | undefined): boolean {
+	if (!token) return false;
+	try {
+		const decoded = JSON.parse(
+			typeof window !== "undefined"
+				? atob(decodeURIComponent(token))
+				: Buffer.from(decodeURIComponent(token), "base64").toString("utf8")
+		);
+		if (!decoded || typeof decoded.exp !== "number") return false;
+		return Date.now() <= decoded.exp;
+	} catch (e) {
+		return false;
+	}
+}
+
 const Page = () => {
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
+	const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+	const params = useSearchParams();
+
 	// get param mala from url
 	const searchParams = useSearchParams();
 	const mala = searchParams.get("mala");
@@ -15,11 +34,20 @@ const Page = () => {
 		if (!mala || !["nimai", "nitai", "vaijayanthi", "tulasi"].includes(mala)) {
 			router.push("/error");
 		}
+
+		// Validate token from URL search params
+		const token = searchParams.get("token");
+
+		if (isTokenValid(token)) {
+			setTokenValid(true);
+		} else {
+			setTokenValid(false);
+		}
 	}, [mala, router]);
 
 	const handleRegisterClick = () => {
 		setLoading(true);
-		router.push("/registration?mala=" + mala);
+		router.push("/registration?mala=" + mala + "&token=" + params.get("token"));
 	};
 
 	const malaNameMapping: { [key: string]: string } = {
@@ -66,18 +94,24 @@ const Page = () => {
 					</div>
 					<div className="max-w-2xl mx-auto px-4 my-12 mb-4 flex flex-col gap-8">
 						<div className="w-full border-t border-orange-800 flex flex-col gap-2 py-2">
-							<button
-								onClick={handleRegisterClick}
-								disabled={loading}
-								className="flex w-full py-2 gap-2 bg-orange-600 text-white px-2 rounded justify-between text-sm items-center"
-							>
-								<span>Register Now</span>
-								{loading ? (
-									<FaSpinner className="animate-spin" />
-								) : (
-									<FaArrowRight />
-								)}
-							</button>
+							{tokenValid ? (
+								<button
+									onClick={handleRegisterClick}
+									disabled={loading}
+									className="flex w-full py-2 gap-2 bg-orange-600 text-white px-2 rounded justify-between text-sm items-center"
+								>
+									<span>Register Now</span>
+									{loading ? (
+										<FaSpinner className="animate-spin" />
+									) : (
+										<FaArrowRight />
+									)}
+								</button>
+							) : (
+								<div className="text-red-600 font-semibold">
+									Registration closed. See you at the event.
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

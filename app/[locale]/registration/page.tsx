@@ -6,15 +6,80 @@ import Summary from "./_comps/Summary";
 import { createClient } from "@/app/utils/supabase/client";
 import { useRouter } from "next/navigation";
 
+/**
+ * Token format (simple client-side): base64(JSON.stringify({ iat, exp }))
+ * - iat: issued at (ms)
+ * - exp: expiry time (ms)
+ *
+ * NOTE: This is a client-only token scheme (easy to generate/inspect). For
+ * real security, generate/verify tokens on the server with a secret.
+ */
+
+/* Utility: create a token valid for `validHours` hours from now */
+export function createRegistrationToken(validHours = 24): string {
+	const now = Date.now();
+	const payload = { iat: now, exp: now + validHours * 60 * 60 * 1000 };
+	// encodeURIComponent to make it safe for use in URLs
+	return encodeURIComponent(
+		typeof window !== "undefined"
+			? btoa(JSON.stringify(payload))
+			: Buffer.from(JSON.stringify(payload)).toString("base64")
+	);
+}
+
+/* Utility: create a full link to /registration with token (uses current origin when available) */
+export function createRegistrationLink(
+	validHours = 24,
+	path = "/registration"
+): string {
+	const token = createRegistrationToken(validHours);
+	const origin = typeof window !== "undefined" ? window.location.origin : "";
+	// If origin is empty (server-side), return relative path
+	return origin ? `${origin}${path}?token=${token}` : `${path}?token=${token}`;
+}
+
+/* Utility: validate token (returns true if token is present and unexpired) */
+export function isTokenValid(token: string | null | undefined): boolean {
+	if (!token) return false;
+	try {
+		const decoded = JSON.parse(
+			typeof window !== "undefined"
+				? atob(decodeURIComponent(token))
+				: Buffer.from(decodeURIComponent(token), "base64").toString("utf8")
+		);
+		if (!decoded || typeof decoded.exp !== "number") return false;
+		return Date.now() <= decoded.exp;
+	} catch (e) {
+		return false;
+	}
+}
+
 export default function App() {
 	const [slot, setSlot] = useState<null | string>("0"); // #2025
 	const [summary, setSummary] = useState<any>(null);
 	const [numbers, setNumbers] = useState<any>(null);
+	const [checkedToken, setCheckedToken] = useState(false);
+	const [authorized, setAuthorized] = useState(false);
 	const router = useRouter();
 
 	useEffect(() => {
 		// Scroll to the top of the page when the component is mounted
 		window.scrollTo(0, 0);
+
+		// Validate token from URL search params
+		const params = new URLSearchParams(window.location.search);
+		const token = params.get("token");
+		if (isTokenValid(token)) {
+			setAuthorized(true);
+		} else {
+			setAuthorized(false);
+			// redirect away after a short delay so user can see message
+			setTimeout(() => {
+				router.push("/?mala=" + params.get("mala"));
+			}, 1500);
+		}
+		setCheckedToken(true);
+
 		// Create a supabase client on the browser with project's credentials
 		const client = createClient();
 		// Fetch the numbers of rows in the table 'registered-users' equal to or above 10
@@ -61,6 +126,26 @@ export default function App() {
 		// fetchData(); fetching data - disabled for now #2025
 	}, []);
 
+	// If token hasn't been checked yet, show loader
+	if (!checkedToken) {
+		return (
+			<div className="h-screen w-full flex justify-center items-center">
+				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+			</div>
+		);
+	}
+
+	// If checked and not authorized, show brief message (redirect will happen)
+	if (!authorized) {
+		return (
+			<div className="h-screen w-full flex flex-col justify-center items-center">
+				<p className="mb-4">Invalid or expired token. Redirecting...</p>
+				<div className="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-900"></div>
+			</div>
+		);
+	}
+
+	// Authorized: render original registration UI
 	return (
 		<div className="App">
 			{slot ? (
